@@ -2,6 +2,7 @@ package com.iagomesquita.financialControl.service;
 
 import com.iagomesquita.financialControl.model.entity.Transaction;
 import com.iagomesquita.financialControl.model.repository.TransactionRepository;
+import com.iagomesquita.financialControl.service.Exception.TransactionNotFount;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,17 @@ public class TransactionService {
     return transactionRepository.findAll();
   }
 
+  public Transaction getByIdTransaction(Long id) throws TransactionNotFount {
+    return transactionRepository.findById(id)
+        .orElseThrow(TransactionNotFount::new);
+  }
+
+  public String removeTransaction(Long id) throws TransactionNotFount {
+    Transaction transactionDb = getByIdTransaction(id);
+
+    transactionRepository.delete(transactionDb);
+
+    return transactionDb.getTitle();
+  }
 
 }
