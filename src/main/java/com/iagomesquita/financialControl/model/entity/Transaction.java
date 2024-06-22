@@ -1,5 +1,6 @@
 package com.iagomesquita.financialControl.model.entity;
 
+import com.iagomesquita.financialControl.model.enums.Type;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,13 +14,15 @@ public class Transaction {
   private Long id;
   private String title;
   private Double amount;
-  private String type;
+  private Type type;
   private LocalDate date;
 
-  public Transaction() {
-  }
+
 
   public Transaction(String title, Double amount, String type, LocalDate date) {
+  }
+
+  public Transaction(String title, Double amount, Type type, LocalDate date) {
     this.title = title;
     this.amount = amount;
     this.type = type;
@@ -51,10 +54,10 @@ public class Transaction {
   }
 
   public String getType() {
-    return type;
+    return type.getType();
   }
 
-  public void setType(String type) {
+  public void setType(Type type) {
     this.type = type;
   }
 
