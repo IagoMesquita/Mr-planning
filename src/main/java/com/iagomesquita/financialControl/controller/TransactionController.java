@@ -1,8 +1,11 @@
 package com.iagomesquita.financialControl.controller;
 
+import com.iagomesquita.financialControl.controller.Dto.TransactionCreationDto;
+import com.iagomesquita.financialControl.controller.Dto.TransactionDto;
 import com.iagomesquita.financialControl.model.entity.Transaction;
 import com.iagomesquita.financialControl.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +24,14 @@ public class TransactionController {
   }
 
   @PostMapping
-  public ResponseEntity<Transaction> addTransaction(@RequestBody ) {
+  public ResponseEntity<TransactionDto> addTransaction(
+      @RequestBody TransactionCreationDto newTransactionCreationDto) {
+      Transaction savedTransaction = transactionService.addTransaction(
+          newTransactionCreationDto.toEntity()
+      );
+
+    return ResponseEntity.status(HttpStatus.CREATED).body(
+        TransactionDto.fromEntity(savedTransaction)
+    );
   }
 }
