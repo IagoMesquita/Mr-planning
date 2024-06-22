@@ -2,31 +2,34 @@ package com.iagomesquita.financialControl.model.entity;
 
 import com.iagomesquita.financialControl.model.enums.Type;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "transactions")
 public class Transaction {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String title;
   private Double amount;
+
+  @Enumerated(EnumType.STRING)
   private Type type;
   private LocalDate date;
 
+public Transaction() {}
 
-
-  public Transaction(String title, Double amount, String type, LocalDate date) {
-  }
-
-  public Transaction(String title, Double amount, Type type, LocalDate date) {
+  public Transaction(String title, Double amount, Type type) {
     this.title = title;
     this.amount = amount;
     this.type = type;
-    this.date = date;
+    this.date = LocalDate.now();
   }
 
   public Long getId() {
@@ -53,8 +56,8 @@ public class Transaction {
     this.amount = amount;
   }
 
-  public String getType() {
-    return type.getType();
+  public Type getType() {
+    return type;
   }
 
   public void setType(Type type) {
