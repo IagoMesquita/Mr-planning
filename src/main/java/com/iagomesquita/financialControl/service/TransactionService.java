@@ -31,6 +31,14 @@ public class TransactionService {
      return transactionRepository.findAllByType(typeTransaction);
   }
 
+  public List<Transaction> getAllTransactionByOrderAmountDec() {
+    return transactionRepository.findAllByOrderByAmountDesc();
+  }
+
+  public List<Transaction> getAllTransactionByOrderDateDesc() {
+    return transactionRepository.findAllByOrderByDateDesc();
+  }
+
   public Transaction getByIdTransaction(Long id) throws TransactionNotFount {
     return transactionRepository.findById(id)
         .orElseThrow(TransactionNotFount::new);

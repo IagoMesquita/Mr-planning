@@ -65,6 +65,28 @@ public class TransactionController {
     );
   }
 
+  @GetMapping("/amountDec")
+  public ResponseEntity<List<TransactionDto>> getAllTransactionsByOrderDec() {
+    List<Transaction> transactionDb = transactionService.getAllTransactionByOrderAmountDec();
+
+    return ResponseEntity.ok().body(
+        transactionDb.stream()
+            .map(TransactionDto::fromEntity)
+            .toList()
+    );
+  }
+
+  @GetMapping("/dateDec")
+  public ResponseEntity<List<TransactionDto>> getAllTransactionsByDateDec() {
+    List<Transaction> transactionDb = transactionService.getAllTransactionByOrderDateDesc();
+
+    return ResponseEntity.ok().body(
+        transactionDb.stream()
+            .map(TransactionDto::fromEntity)
+            .toList()
+    );
+  }
+
   @DeleteMapping("/{id}")
   public ResponseEntity<String> removeTransaction(@PathVariable Long id)
       throws TransactionNotFount {
