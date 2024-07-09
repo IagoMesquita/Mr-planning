@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -41,22 +42,27 @@ public class TransactionController {
     );
   }
 
+//  @GetMapping
+//  public ResponseEntity<List<TransactionDto>> getAllTransactions() {
+//    List<Transaction> transactionsDb = transactionService.getAllTransactions();
+//    return ResponseEntity.ok(
+//        transactionsDb
+//            .stream()
+//            .map(TransactionDto::fromEntity)
+//            .toList()
+//    );
+//  }
+
   @GetMapping
-  public ResponseEntity<List<TransactionDto>> getAllTransactions() {
-    List<Transaction> transactionsDb = transactionService.getAllTransactions();
-    return ResponseEntity.ok(
-        transactionsDb
-            .stream()
-            .map(TransactionDto::fromEntity)
-            .toList()
-    );
-  }
-
-  @GetMapping("/{type}")
-  public ResponseEntity<List<TransactionDto>> getAllTransactionsByType(
-      @PathVariable Type type) {
-
-    List<Transaction> transactionsDb = transactionService.getByTypeTransaction(type);
+  public ResponseEntity<List<TransactionDto>> getAllTransactions(
+      @RequestParam(required = false) Type type,
+      @RequestParam(required = false) Boolean orderByAmount,
+      @RequestParam(required = false) Boolean isAmountAsc,
+      @RequestParam(required = false) Boolean orderByDate,
+      @RequestParam(required = false) Boolean isDateAsc
+  ) {
+    List<Transaction> transactionsDb = transactionService.filterByTypeAndOrderTransactions(
+        type, orderByAmount, isAmountAsc, orderByDate, isDateAsc);
 
     return ResponseEntity.ok().body(
         transactionsDb.stream()
@@ -65,27 +71,40 @@ public class TransactionController {
     );
   }
 
-  @GetMapping("/amountDec")
-  public ResponseEntity<List<TransactionDto>> getAllTransactionsByOrderDec() {
-    List<Transaction> transactionDb = transactionService.getAllTransactionByOrderAmountDec();
-
-    return ResponseEntity.ok().body(
-        transactionDb.stream()
-            .map(TransactionDto::fromEntity)
-            .toList()
-    );
-  }
-
-  @GetMapping("/dateDec")
-  public ResponseEntity<List<TransactionDto>> getAllTransactionsByDateDec() {
-    List<Transaction> transactionDb = transactionService.getAllTransactionByOrderDateDesc();
-
-    return ResponseEntity.ok().body(
-        transactionDb.stream()
-            .map(TransactionDto::fromEntity)
-            .toList()
-    );
-  }
+//  @GetMapping("/{type}")
+//  public ResponseEntity<List<TransactionDto>> getAllTransactionsByType(
+//      @PathVariable Type type) {
+//
+//    List<Transaction> transactionsDb = transactionService.getByTypeTransaction(type);
+//
+//    return ResponseEntity.ok().body(
+//        transactionsDb.stream()
+//            .map(TransactionDto::fromEntity)
+//            .toList()
+//    );
+//  }
+//
+//  @GetMapping("/amountDec")
+//  public ResponseEntity<List<TransactionDto>> getAllTransactionsByOrderDec() {
+//    List<Transaction> transactionDb = transactionService.getAllTransactionByOrderAmountDec();
+//
+//    return ResponseEntity.ok().body(
+//        transactionDb.stream()
+//            .map(TransactionDto::fromEntity)
+//            .toList()
+//    );
+//  }
+//
+//  @GetMapping("/dateDec")
+//  public ResponseEntity<List<TransactionDto>> getAllTransactionsByDateDec() {
+//    List<Transaction> transactionDb = transactionService.getAllTransactionByOrderDateDesc();
+//
+//    return ResponseEntity.ok().body(
+//        transactionDb.stream()
+//            .map(TransactionDto::fromEntity)
+//            .toList()
+//    );
+//  }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<String> removeTransaction(@PathVariable Long id)
