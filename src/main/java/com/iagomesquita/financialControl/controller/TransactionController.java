@@ -3,6 +3,7 @@ package com.iagomesquita.financialControl.controller;
 import com.iagomesquita.financialControl.controller.Dto.TransactionCreationDto;
 import com.iagomesquita.financialControl.controller.Dto.TransactionDto;
 import com.iagomesquita.financialControl.model.entity.Transaction;
+import com.iagomesquita.financialControl.model.enums.Type;
 import com.iagomesquita.financialControl.service.Exception.TransactionNotFount;
 import com.iagomesquita.financialControl.service.TransactionService;
 import java.util.List;
@@ -31,9 +32,9 @@ public class TransactionController {
   @PostMapping
   public ResponseEntity<TransactionDto> addTransaction(
       @RequestBody TransactionCreationDto newTransactionCreationDto) {
-      Transaction savedTransaction = transactionService.addTransaction(
-          newTransactionCreationDto.toEntity()
-      );
+    Transaction savedTransaction = transactionService.addTransaction(
+        newTransactionCreationDto.toEntity()
+    );
 
     return ResponseEntity.status(HttpStatus.CREATED).body(
         TransactionDto.fromEntity(savedTransaction)
@@ -46,6 +47,19 @@ public class TransactionController {
     return ResponseEntity.ok(
         transactionsDb
             .stream()
+            .map(TransactionDto::fromEntity)
+            .toList()
+    );
+  }
+
+  @GetMapping("/{type}")
+  public ResponseEntity<List<TransactionDto>> getAllTransactionsByType(
+      @PathVariable Type type) {
+
+    List<Transaction> transactionsDb = transactionService.getByTypeTransaction(type);
+
+    return ResponseEntity.ok().body(
+        transactionsDb.stream()
             .map(TransactionDto::fromEntity)
             .toList()
     );

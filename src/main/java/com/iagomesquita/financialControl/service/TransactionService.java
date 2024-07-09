@@ -1,6 +1,7 @@
 package com.iagomesquita.financialControl.service;
 
 import com.iagomesquita.financialControl.model.entity.Transaction;
+import com.iagomesquita.financialControl.model.enums.Type;
 import com.iagomesquita.financialControl.model.repository.TransactionRepository;
 import com.iagomesquita.financialControl.service.Exception.TransactionNotFount;
 import java.util.List;
@@ -24,6 +25,10 @@ public class TransactionService {
   public List<Transaction> getAllTransactions() {
 
     return transactionRepository.findAll();
+  }
+
+  public List<Transaction> getByTypeTransaction(Type typeTransaction) {
+     return transactionRepository.findAllByType(typeTransaction);
   }
 
   public Transaction getByIdTransaction(Long id) throws TransactionNotFount {
