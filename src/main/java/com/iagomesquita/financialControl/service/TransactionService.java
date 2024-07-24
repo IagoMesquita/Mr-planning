@@ -6,6 +6,7 @@ import com.iagomesquita.financialControl.model.repository.TransactionRepository;
 import com.iagomesquita.financialControl.service.Exception.TransactionNotFount;
 import com.iagomesquita.financialControl.specification.TransactionSpecification;
 import java.util.List;
+import javax.swing.text.StyledEditorKit.BoldAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
@@ -30,10 +31,13 @@ public class TransactionService {
 //    return transactionRepository.findAll();
 //  }
 
-  public List<Transaction> filterByTypeAndOrderTransactions(
+  public List<Transaction> findTransactions(
       Type type,
       Boolean orderByAmount, Boolean isAmountAsc,
-      Boolean orderByDate, Boolean isDateAsc) {
+      Boolean orderByDate, Boolean isDateAsc,
+      Integer day, Integer month, Integer year
+  ) {
+
     Specification<Transaction> specification = Specification.where(null);
 
     if (type != null) {
@@ -51,6 +55,19 @@ public class TransactionService {
       );
     }
 
+    if (day != null) {
+      specification = specification.and(
+          TransactionSpecification.hasDay(day));
+    }
+
+    if (month != null) {
+      specification = specification.and(
+          TransactionSpecification.hasMonth(month));
+    }
+    if (year != null) {
+      specification = specification.and(
+          TransactionSpecification.hasYear(year));
+    }
     return transactionRepository.findAll(specification);
   }
 

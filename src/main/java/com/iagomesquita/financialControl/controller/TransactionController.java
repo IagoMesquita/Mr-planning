@@ -59,10 +59,13 @@ public class TransactionController {
       @RequestParam(required = false) Boolean orderByAmount,
       @RequestParam(required = false) Boolean isAmountAsc,
       @RequestParam(required = false) Boolean orderByDate,
-      @RequestParam(required = false) Boolean isDateAsc
+      @RequestParam(required = false) Boolean isDateAsc,
+      @RequestParam(required = false) Integer day,
+      @RequestParam(required = false) Integer month,
+      @RequestParam(required = false) Integer year
   ) {
-    List<Transaction> transactionsDb = transactionService.filterByTypeAndOrderTransactions(
-        type, orderByAmount, isAmountAsc, orderByDate, isDateAsc);
+    List<Transaction> transactionsDb = transactionService.findTransactions(
+        type, orderByAmount, isAmountAsc, orderByDate, isDateAsc, day, month, year);
 
     return ResponseEntity.ok().body(
         transactionsDb.stream()
