@@ -26,11 +26,6 @@ public class TransactionService {
     return transactionRepository.save(newTransaction);
   }
 
-//  public List<Transaction> getAllTransactions() {
-//
-//    return transactionRepository.findAll();
-//  }
-
   public List<Transaction> findTransactions(
       Type type,
       Boolean orderByAmount, Boolean isAmountAsc,
@@ -70,18 +65,6 @@ public class TransactionService {
     }
     return transactionRepository.findAll(specification);
   }
-
-//  public List<Transaction> getByTypeTransaction(Type typeTransaction) {
-//    return transactionRepository.findAllByType(typeTransaction);
-//  }
-//
-//  public List<Transaction> getAllTransactionByOrderAmountDec() {
-//    return transactionRepository.findAllByOrderByAmountDesc();
-//  }
-//
-//  public List<Transaction> getAllTransactionByOrderDateDesc() {
-//    return transactionRepository.findAllByOrderByDateDesc();
-//  }
 
   public Transaction getByIdTransaction(Long id) throws TransactionNotFount {
     return transactionRepository.findById(id)
