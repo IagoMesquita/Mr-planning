@@ -19,20 +19,20 @@ public class User implements UserDetails {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "user_id")
   private Long id;
-  private String fullName;
+  private String fullname;
   private String email;
 
   @Column(unique = true)
-  private String userName;
+  private String username;
   private String password;
 
   public User() {
   }
 
-  public User(String fullName, String email, String userName, String password) {
-    this.fullName = fullName;
+  public User(String fullname, String email, String username, String password) {
+    this.fullname = fullname;
     this.email = email;
-    this.userName = userName;
+    this.username = username;
     this.password = password;
   }
 
@@ -45,12 +45,12 @@ public class User implements UserDetails {
     this.id = id;
   }
 
-  public String getFullName() {
-    return fullName;
+  public String getFullname() {
+    return fullname;
   }
 
-  public void setFullName(String fullName) {
-    this.fullName = fullName;
+  public void setFullName(String fullname) {
+    this.fullname = fullname;
   }
 
   public String getEmail() {
@@ -75,13 +75,13 @@ public class User implements UserDetails {
     return password;
   }
 
-  public void setUserName(String userName) {
-    this.userName = userName;
+  public void setUsername(String username) {
+    this.username = username;
   }
 
   @Override
   public String getUsername() {
-    return userName;
+    return username;
   }
 
   @Override
