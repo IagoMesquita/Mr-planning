@@ -5,6 +5,7 @@ import com.iagomesquita.financialControl.controller.Dto.TransactionDto;
 import com.iagomesquita.financialControl.model.entity.Transaction;
 import com.iagomesquita.financialControl.model.enums.Type;
 import com.iagomesquita.financialControl.service.Exception.TransactionNotFount;
+import com.iagomesquita.financialControl.service.Exception.UserNotFoundException;
 import com.iagomesquita.financialControl.service.TransactionService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +31,12 @@ public class TransactionController {
     this.transactionService = transactionService;
   }
 
-  @PostMapping
+  @PostMapping("/{userId}")
   public ResponseEntity<TransactionDto> addTransaction(
-      @RequestBody TransactionCreationDto newTransactionCreationDto) {
-    Transaction savedTransaction = transactionService.addTransaction(
+      @PathVariable Long userId,
+      @RequestBody TransactionCreationDto newTransactionCreationDto) throws UserNotFoundException {
+    Transaction savedTransaction = transactionService.addTransactionByUser(
+        userId,
         newTransactionCreationDto.toEntity()
     );
 
@@ -53,8 +56,9 @@ public class TransactionController {
 //    );
 //  }
 
-  @GetMapping
+  @GetMapping("/{userId}")
   public ResponseEntity<List<TransactionDto>> getAllTransactions(
+      @PathVariable Long userId,
       @RequestParam(required = false) Type type,
       @RequestParam(required = false) Boolean orderByAmount,
       @RequestParam(required = false) Boolean isAmountAsc,
