@@ -69,6 +69,7 @@ public class TransactionController {
       @RequestParam(required = false) Integer year
   ) {
     List<Transaction> transactionsDb = transactionService.findTransactions(
+        userId,
         type, orderByAmount, isAmountAsc, orderByDate, isDateAsc, day, month, year);
 
     return ResponseEntity.ok().body(

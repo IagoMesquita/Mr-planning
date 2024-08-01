@@ -70,6 +70,10 @@ public class TransactionService {
       specification = specification.and(
           TransactionSpecification.hasYear(year));
     }
+
+    specification = specification.and(
+        TransactionSpecification.getByUserId(userId));
+
     return transactionRepository.findAll(specification);
   }
 
