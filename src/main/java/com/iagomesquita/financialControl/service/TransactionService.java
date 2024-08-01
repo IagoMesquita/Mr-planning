@@ -1,9 +1,12 @@
 package com.iagomesquita.financialControl.service;
 
 import com.iagomesquita.financialControl.model.entity.Transaction;
+import com.iagomesquita.financialControl.model.entity.User;
 import com.iagomesquita.financialControl.model.enums.Type;
 import com.iagomesquita.financialControl.model.repository.TransactionRepository;
+import com.iagomesquita.financialControl.model.repository.UserRepository;
 import com.iagomesquita.financialControl.service.Exception.TransactionNotFount;
+import com.iagomesquita.financialControl.service.Exception.UserNotFoundException;
 import com.iagomesquita.financialControl.specification.TransactionSpecification;
 import java.util.List;
 import javax.swing.text.StyledEditorKit.BoldAction;
@@ -15,23 +18,22 @@ import org.springframework.stereotype.Service;
 public class TransactionService {
 
   private final TransactionRepository transactionRepository;
+  private final UserRepository userRepository;
 
   @Autowired
-  public TransactionService(TransactionRepository transactionRepository) {
+  public TransactionService(TransactionRepository transactionRepository,
+      UserRepository userRepository) {
     this.transactionRepository = transactionRepository;
+    this.userRepository = userRepository;
   }
 
-  public Transaction addTransaction(Transaction newTransaction) {
-
-    return transactionRepository.save(newTransaction);
-  }
-
-//  public List<Transaction> getAllTransactions() {
+//  public Transaction addTransaction(Transaction newTransaction) {
 //
-//    return transactionRepository.findAll();
+//    return transactionRepository.save(newTransaction);
 //  }
 
   public List<Transaction> findTransactions(
+      Long userId,
       Type type,
       Boolean orderByAmount, Boolean isAmountAsc,
       Boolean orderByDate, Boolean isDateAsc,
@@ -68,20 +70,12 @@ public class TransactionService {
       specification = specification.and(
           TransactionSpecification.hasYear(year));
     }
+
+    specification = specification.and(
+        TransactionSpecification.getByUserId(userId));
+
     return transactionRepository.findAll(specification);
   }
-
-//  public List<Transaction> getByTypeTransaction(Type typeTransaction) {
-//    return transactionRepository.findAllByType(typeTransaction);
-//  }
-//
-//  public List<Transaction> getAllTransactionByOrderAmountDec() {
-//    return transactionRepository.findAllByOrderByAmountDesc();
-//  }
-//
-//  public List<Transaction> getAllTransactionByOrderDateDesc() {
-//    return transactionRepository.findAllByOrderByDateDesc();
-//  }
 
   public Transaction getByIdTransaction(Long id) throws TransactionNotFount {
     return transactionRepository.findById(id)
@@ -94,6 +88,15 @@ public class TransactionService {
     transactionRepository.delete(transactionDb);
 
     return transactionDb.getTitle();
+  }
+
+  public Transaction addTransactionByUser(Long userId, Transaction newTransaction)
+      throws UserNotFoundException {
+    User userDb = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+    newTransaction.setUser(userDb);
+
+    return transactionRepository.save(newTransaction);
   }
 
 }

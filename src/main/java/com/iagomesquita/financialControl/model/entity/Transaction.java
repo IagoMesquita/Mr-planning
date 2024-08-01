@@ -7,12 +7,16 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "transactions")
 public class Transaction {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -23,7 +27,13 @@ public class Transaction {
   private Type type;
   private LocalDate date;
 
-public Transaction() {}
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private User user;
+
+  public Transaction() {
+  }
+
 
   public Transaction(String title, Double amount, Type type) {
     this.title = title;
@@ -70,5 +80,13 @@ public Transaction() {}
 
   public void setDate(LocalDate date) {
     this.date = date;
+  }
+
+  public User getUser() {
+    return user;
+  }
+
+  public void setUser(User user) {
+    this.user = user;
   }
 }

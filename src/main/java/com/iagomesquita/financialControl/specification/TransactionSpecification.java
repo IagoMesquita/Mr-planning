@@ -7,6 +7,11 @@ import org.springframework.data.jpa.domain.Specification;
 
 public class TransactionSpecification {
 
+  public static Specification<Transaction> getByUserId(Long userId) {
+    return (transactionRoot, query, criteriaBuilder) -> criteriaBuilder
+        .equal(transactionRoot.get("user").get("id"), userId);
+  }
+
   public static Specification<Transaction> hasType(Type type) {
     return (transactionRoot, query, criteriaBuilder) -> criteriaBuilder
         .equal(transactionRoot.get("type"), type);
