@@ -5,6 +5,7 @@ import com.iagomesquita.financialControl.model.entity.User;
 import com.iagomesquita.financialControl.model.enums.Type;
 import com.iagomesquita.financialControl.model.repository.TransactionRepository;
 import com.iagomesquita.financialControl.model.repository.UserRepository;
+import com.iagomesquita.financialControl.service.Exception.RequiredParameterException;
 import com.iagomesquita.financialControl.service.Exception.TransactionNotFount;
 import com.iagomesquita.financialControl.service.Exception.UserNotFoundException;
 import com.iagomesquita.financialControl.specification.TransactionSpecification;
@@ -38,7 +39,10 @@ public class TransactionService {
       Boolean orderByAmount, Boolean isAmountAsc,
       Boolean orderByDate, Boolean isDateAsc,
       Integer day, Integer month, Integer year
-  ) {
+  ) throws UserNotFoundException {
+//    if (userId == null) throw new RequiredUserIdException();
+
+    userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
     Specification<Transaction> specification = Specification.where(null);
 

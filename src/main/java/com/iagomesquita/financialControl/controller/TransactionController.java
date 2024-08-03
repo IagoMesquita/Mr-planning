@@ -4,11 +4,13 @@ import com.iagomesquita.financialControl.controller.Dto.TransactionCreationDto;
 import com.iagomesquita.financialControl.controller.Dto.TransactionDto;
 import com.iagomesquita.financialControl.model.entity.Transaction;
 import com.iagomesquita.financialControl.model.enums.Type;
+import com.iagomesquita.financialControl.service.Exception.RequiredParameterException;
 import com.iagomesquita.financialControl.service.Exception.TransactionNotFount;
 import com.iagomesquita.financialControl.service.Exception.UserNotFoundException;
 import com.iagomesquita.financialControl.service.TransactionService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -35,6 +37,7 @@ public class TransactionController {
   public ResponseEntity<TransactionDto> addTransaction(
       @PathVariable Long userId,
       @RequestBody TransactionCreationDto newTransactionCreationDto) throws UserNotFoundException {
+
     Transaction savedTransaction = transactionService.addTransactionByUser(
         userId,
         newTransactionCreationDto.toEntity()
@@ -67,7 +70,8 @@ public class TransactionController {
       @RequestParam(required = false) Integer day,
       @RequestParam(required = false) Integer month,
       @RequestParam(required = false) Integer year
-  ) {
+  ) throws UserNotFoundException, RequiredParameterException {
+
     List<Transaction> transactionsDb = transactionService.findTransactions(
         userId,
         type, orderByAmount, isAmountAsc, orderByDate, isDateAsc, day, month, year);
@@ -77,6 +81,7 @@ public class TransactionController {
             .map(TransactionDto::fromEntity)
             .toList()
     );
+
   }
 
 //  @GetMapping("/{type}")

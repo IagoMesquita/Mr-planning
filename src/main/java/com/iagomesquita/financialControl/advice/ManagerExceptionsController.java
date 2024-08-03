@@ -21,10 +21,10 @@ public class ManagerExceptionsController {
     );
   }
 
-  @ExceptionHandler(RequiredParameterException.class)
-  public ResponseEntity<String> handleRequiredException(Exception exception) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-        exception.getMessage()
-    );
-  }
+//  @ExceptionHandler(RequiredParameterException.class)
+//  public ResponseEntity<String> handleRequiredException(Exception exception) {
+//    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+//        exception.getMessage()
+//    );
+//  }
 }
