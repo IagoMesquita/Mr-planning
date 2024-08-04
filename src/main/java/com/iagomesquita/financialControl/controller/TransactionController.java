@@ -119,11 +119,15 @@ public class TransactionController {
 //    );
 //  }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<String> removeTransaction(@PathVariable Long id)
-      throws TransactionNotFount {
-    String titleTransaction = transactionService.removeTransaction(id);
+  @DeleteMapping("/{transactionId}/user/{userId}")
+  public ResponseEntity<String> removeTransactionByUser(@PathVariable Long transactionId,
+      @PathVariable Long userId)
+      throws UserNotFoundException {
 
+    // Adicione logs para depuração
+    System.out.println("Transaction ID: " + transactionId);
+    System.out.println("User ID: " + userId);
+    String titleTransaction = transactionService.removeTransaction(userId, transactionId);
     return ResponseEntity.ok(titleTransaction);
   }
 

@@ -10,6 +10,7 @@ import com.iagomesquita.financialControl.service.Exception.TransactionNotFount;
 import com.iagomesquita.financialControl.service.Exception.UserNotFoundException;
 import com.iagomesquita.financialControl.specification.TransactionSpecification;
 import java.util.List;
+import java.util.Objects;
 import javax.swing.text.StyledEditorKit.BoldAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -86,13 +87,29 @@ public class TransactionService {
         .orElseThrow(TransactionNotFount::new);
   }
 
-  public String removeTransaction(Long id) throws TransactionNotFount {
-    Transaction transactionDb = getByIdTransaction(id);
+//  public String removeTransaction(Long id) throws TransactionNotFount {
+//    Transaction transactionDb = getByIdTransaction(id);
+//
+//    transactionRepository.delete(transactionDb);
+//
+//    return transactionDb.getTitle();
+//  }
 
-    transactionRepository.delete(transactionDb);
+  public String removeTransaction(Long userId, Long transactionId)
+      throws UserNotFoundException {
 
-    return transactionDb.getTitle();
+    User userDb = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+    Transaction transactionDB = userDb.getTransactions()
+        .stream()
+        .filter(transaction -> Objects.equals(transaction.getId(), transactionId))
+        .toList().
+        get(0);
+
+    transactionRepository.delete(transactionDB);
+
+    return (transactionDB).getTitle();
   }
+
 
   public Transaction addTransactionByUser(Long userId, Transaction newTransaction)
       throws UserNotFoundException {
