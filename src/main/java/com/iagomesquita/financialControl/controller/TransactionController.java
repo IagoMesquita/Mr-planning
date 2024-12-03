@@ -4,10 +4,13 @@ import com.iagomesquita.financialControl.controller.Dto.TransactionCreationDto;
 import com.iagomesquita.financialControl.controller.Dto.TransactionDto;
 import com.iagomesquita.financialControl.model.entity.Transaction;
 import com.iagomesquita.financialControl.model.enums.Type;
+import com.iagomesquita.financialControl.service.Exception.RequiredParameterException;
 import com.iagomesquita.financialControl.service.Exception.TransactionNotFount;
+import com.iagomesquita.financialControl.service.Exception.UserNotFoundException;
 import com.iagomesquita.financialControl.service.TransactionService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.observation.ObservationProperties.Http;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,10 +33,13 @@ public class TransactionController {
     this.transactionService = transactionService;
   }
 
-  @PostMapping
+  @PostMapping("/{userId}")
   public ResponseEntity<TransactionDto> addTransaction(
-      @RequestBody TransactionCreationDto newTransactionCreationDto) {
-    Transaction savedTransaction = transactionService.addTransaction(
+      @PathVariable Long userId,
+      @RequestBody TransactionCreationDto newTransactionCreationDto) throws UserNotFoundException {
+
+    Transaction savedTransaction = transactionService.addTransactionByUser(
+        userId,
         newTransactionCreationDto.toEntity()
     );
 
@@ -53,8 +59,9 @@ public class TransactionController {
 //    );
 //  }
 
-  @GetMapping
+  @GetMapping("/{userId}")
   public ResponseEntity<List<TransactionDto>> getAllTransactions(
+      @PathVariable Long userId,
       @RequestParam(required = false) Type type,
       @RequestParam(required = false) Boolean orderByAmount,
       @RequestParam(required = false) Boolean isAmountAsc,
@@ -63,8 +70,10 @@ public class TransactionController {
       @RequestParam(required = false) Integer day,
       @RequestParam(required = false) Integer month,
       @RequestParam(required = false) Integer year
-  ) {
+  ) throws UserNotFoundException, RequiredParameterException {
+
     List<Transaction> transactionsDb = transactionService.findTransactions(
+        userId,
         type, orderByAmount, isAmountAsc, orderByDate, isDateAsc, day, month, year);
 
     return ResponseEntity.ok().body(
@@ -72,6 +81,7 @@ public class TransactionController {
             .map(TransactionDto::fromEntity)
             .toList()
     );
+
   }
 
 //  @GetMapping("/{type}")
@@ -109,11 +119,15 @@ public class TransactionController {
 //    );
 //  }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<String> removeTransaction(@PathVariable Long id)
-      throws TransactionNotFount {
-    String titleTransaction = transactionService.removeTransaction(id);
+  @DeleteMapping("/{transactionId}/user/{userId}")
+  public ResponseEntity<String> removeTransactionByUser(@PathVariable Long transactionId,
+      @PathVariable Long userId)
+      throws UserNotFoundException {
 
+    // Adicione logs para depuração
+    System.out.println("Transaction ID: " + transactionId);
+    System.out.println("User ID: " + userId);
+    String titleTransaction = transactionService.removeTransaction(userId, transactionId);
     return ResponseEntity.ok(titleTransaction);
   }
 
